@@ -1,60 +1,88 @@
 const plugin = require("tailwindcss/plugin");
-const lodash = require("lodash");
+const _ = require("lodash");
+const { default: flattenColorPalette } = require("tailwindcss/lib/util/flattenColorPalette")
 
 module.exports = plugin.withOptions(function (options = {}) {
-    return function({ matchUtilities, theme }) {
-        let prefix = options.prefix || 'prose'
-        let styles = lodash.merge({
-            'text-color': ['black', 'white'],
-            'text-size': ['xs', 'sm', 'base', 'md', 'lg', 'xl', '2xl', '3xl', '4xl', '5xl', '6xl'],
-            'font-family': ['sans', 'serif'],
-            'background-color': ['black', 'white'],
-            'text-align': ['left', 'center', 'right', 'justify'],
-            'text-indent': ['1', '2', '3', '4', '5', '6'],
+    return function ({ addUtilities, matchUtilities, theme }) {
+        let prefix = options.prefix || 'strata-prose'
+        let styles = _.merge({
+            textColor: {
+                prefix: options.styles?.textColor?.prefix || 'text-color',
+                options: options.styles?.backgroundColor?.options || flattenColorPalette(theme('colors'))
+            },
+            textSize: {
+                prefix: options.styles?.textSize?.prefix || 'text-size',
+                options: options.styles?.textSize?.options || Object.keys(theme('fontSize'))
+            },
+            backgroundColor: {
+                prefix: options.styles?.backgroundColor?.prefix || 'background-color',
+                options: options.styles?.backgroundColor?.options || flattenColorPalette(theme('colors'))
+            },
+            fontFamily: {
+                prefix: options.styles?.fontFamily?.prefix || 'font-family',
+                options: options.styles?.fontFamily?.options || Object.keys(theme('fontFamily'))
+            },
+            textAlign: {
+                prefix: options.styles?.textAlign?.prefix || 'text-align',
+                options: options.styles?.textAlign?.options || ['left', 'center', 'right', 'justify'],
+            },
+            textIndent: {
+                prefix: options.styles?.textIndent?.prefix || 'text-indent',
+                options: options.styles?.textIndent?.options || Object.keys(theme('spacing')),
+            },
         }, options.styles || {})
 
         for (let type in styles) {
+            let defaultClassName = type.replace(/([a-z0–9])([A-Z])/g, "$1-$2").toLowerCase();
+            let classNamePrefix = `${prefix}-${styles[type].prefix || defaultClassName}`
             let values = {}
-            // Convert to kebab case.
-            type = type.replace(/([a-z0–9])([A-Z])/g, "$1-$2").toLowerCase();
 
-            styles[type].forEach((option) => {
+            styles[type].options.forEach((option) => {
                 values[option] = option
             })
 
             switch (type) {
-                case 'text-color':
+                case 'textColor':
+                    let allowedTextColors = _.isArray(styles.textColor.options)
+                        ? styles.textColor.options
+                        : Object.keys(styles.textColor.options)
+
+                    allowedTextColors.forEach((colorName) => {
+                        addUtilities({
+                            [`.${classNamePrefix}-${colorName}`]: {
+                                'color': flattenColorPalette(theme('colors'))[colorName]
+                            }
+                        })
+                    })
+
+                    break
+                case 'textSize':
                     matchUtilities({
-                            [`${prefix}-${type}`]: (value) => ({
-                                'color': theme(`colors.${value}`)
-                            }),
-                        },
-                        { values: values }
-                    )
-                    break;
-                case 'text-size':
-                    matchUtilities({
-                            [`${prefix}-${type}`]: (value) => ({
+                            [classNamePrefix]: (value) => ({
                                 'font-size': theme(`fontSize.${value}`)
                             }),
                         },
                         { values: values }
                     )
-                    break;
 
-                case 'background-color':
-                    matchUtilities({
-                            [`${prefix}-${type}`]: (value) => ({
-                                'background-color': theme(`colors.${value}`)
-                            }),
-                        },
-                        { values: values }
-                    )
                     break;
+                case 'backgroundColor':
+                    let allowedBackgroundColors = _.isArray(styles.backgroundColor.options)
+                        ? styles.backgroundColor.options
+                        : Object.keys(styles.backgroundColor.options)
 
-                case 'font-family':
+                    allowedBackgroundColors.forEach((colorName) => {
+                        addUtilities({
+                            [`.${classNamePrefix}-${colorName}`]: {
+                                'background-color': flattenColorPalette(theme('colors'))[colorName]
+                            }
+                        })
+                    })
+
+                    break;
+                case 'fontFamily':
                     matchUtilities({
-                            [`${prefix}-${type}`]: (value) => ({
+                            [classNamePrefix]: (value) => ({
                                 'font-family': theme(`fontFamily.${value}`)
                             }),
                         },
@@ -62,9 +90,9 @@ module.exports = plugin.withOptions(function (options = {}) {
                     )
                     break;
 
-                case 'text-align':
+                case 'textAlign':
                     matchUtilities({
-                            [`${prefix}-${type}`]: (value) => ({
+                            [classNamePrefix]: (value) => ({
                                 'text-align': value
                             }),
                         },
@@ -72,9 +100,9 @@ module.exports = plugin.withOptions(function (options = {}) {
                     )
                     break;
 
-                case 'text-indent':
+                case 'textIndent':
                     matchUtilities({
-                            [`${prefix}-${type}`]: (value) => ({
+                            [classNamePrefix]: (value) => ({
                                 'text-indent': theme(`spacing.${value}`)
                             }),
                         },
