@@ -13,7 +13,7 @@ module.exports = {
 ```
 
 ### Purging classes
-If you're purging classes make sure to add the generated classes to you safelist. By default, all Strata Prose editor classes are prefixed with `strata-prose-` by default.
+If you're purging classes make sure to add the generated classes to you safelist. By default, all Strata Prose editor classes are prefixed with `strata-` by default.
 
 ```js
 module.exports = {
@@ -22,7 +22,7 @@ module.exports = {
         require('@astrogoat/tailwindcss-prose')
     ],
     safelist: [
-        { pattern: /strata-prose-/ },
+        { pattern: /strata-/ },
     ],
 }
 ```
@@ -48,6 +48,7 @@ module.exports = {
                     options: [
                         'evergreen',
                         'sand',
+                        'sand-dark',
                         'sprout',
                     ],
                 },
@@ -55,6 +56,7 @@ module.exports = {
                     options: [
                         'evergreen',
                         'sand',
+                        'sand-dark',
                         'sprout',
                     ],
                 }
@@ -74,6 +76,9 @@ This will produce something like so:
 .my-editor-my-text-color-sand{
     background-color: #D4C4BA;
 }
+.my-editor-my-text-color-sand_dark{
+    background-color: #CBB7AB;
+}
 .my-editor-my-text-color-sprout{
     background-color: #158F48;
 }
@@ -86,6 +91,9 @@ This will produce something like so:
 .my-editor-background-color-sand{
     background-color: #D4C4BA;
 }
+.my-editor-background-color-sand_dark{
+    background-color: #CBB7AB;
+}
 .my-editor-text-size-xs{
     font-size: 0.75rem;
 }
@@ -94,6 +102,11 @@ This will produce something like so:
 }
 /* ... and so on ... */
 ```
+> Notice the `sand-dark` variant example, any dashes (`-`) in the CSS class name will be replaced with an underscore (`_`).   
+> This is a limitation of the Quill.js editor Strata is using under the hood.  
+> 
+> `.my-editor-my-text-color-sand_dark { background-color: #CBB7AB; }
+`
 
 ## Options
 These are the style options that are exposed to be customized. All have an option to define the prefix for the style and the options that it should limit/generate.
@@ -108,6 +121,7 @@ module.exports = {
                 // ...
             ],
         },
+        // ...
     }
 }
 ```
@@ -122,6 +136,7 @@ module.exports = {
                 // ...
             ],
         },
+        // ...
     }
 }
 ```
@@ -136,6 +151,7 @@ module.exports = {
                 // ...
             ],
         },
+        // ...
     }
 }
 ```
@@ -150,6 +166,7 @@ module.exports = {
                 // ...
             ],
         },
+        // ...
     }
 }
 ```
@@ -164,6 +181,7 @@ module.exports = {
                 // ...
             ],
         },
+        // ...
     }
 }
 ```
@@ -178,6 +196,7 @@ module.exports = {
                 // ...
             ],
         },
+        // ...
     }
 }
 ```

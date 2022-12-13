@@ -4,7 +4,7 @@ const { default: flattenColorPalette } = require("tailwindcss/lib/util/flattenCo
 
 module.exports = plugin.withOptions(function (options = {}) {
     return function ({ addUtilities, matchUtilities, theme }) {
-        let prefix = options.prefix || 'strata-prose'
+        let prefix = options.prefix || 'strata-'
         let styles = _.merge({
             textColor: {
                 prefix: options.styles?.textColor?.prefix || 'text-color',
@@ -34,7 +34,7 @@ module.exports = plugin.withOptions(function (options = {}) {
 
         for (let type in styles) {
             let defaultClassName = type.replace(/([a-z0–9])([A-Z])/g, "$1-$2").toLowerCase();
-            let classNamePrefix = `${prefix}-${styles[type].prefix || defaultClassName}`
+            let classNamePrefix = `${prefix}${styles[type].prefix || defaultClassName}`
             let values = {}
 
             styles[type].options.forEach((option) => {
@@ -49,7 +49,7 @@ module.exports = plugin.withOptions(function (options = {}) {
 
                     allowedTextColors.forEach((colorName) => {
                         addUtilities({
-                            [`.${classNamePrefix}-${colorName}`]: {
+                            [`.${classNamePrefix}-${colorName.replace('-', '_')}`]: {
                                 'color': flattenColorPalette(theme('colors'))[colorName]
                             }
                         })
@@ -73,7 +73,7 @@ module.exports = plugin.withOptions(function (options = {}) {
 
                     allowedBackgroundColors.forEach((colorName) => {
                         addUtilities({
-                            [`.${classNamePrefix}-${colorName}`]: {
+                            [`.${classNamePrefix}-${colorName.replace('-', '_')}`]: {
                                 'background-color': flattenColorPalette(theme('colors'))[colorName]
                             }
                         })
