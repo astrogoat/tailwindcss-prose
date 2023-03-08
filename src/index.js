@@ -49,7 +49,7 @@ module.exports = plugin.withOptions(function (options = {}) {
 
                     allowedTextColors.forEach((colorName) => {
                         addUtilities({
-                            [`.${classNamePrefix}-${colorName.replace('-', '_')}`]: {
+                            [`.${classNamePrefix}-${colorName.replaceAll('-', '_')}`]: {
                                 'color': flattenColorPalette(theme('colors'))[colorName]
                             }
                         })
@@ -73,7 +73,7 @@ module.exports = plugin.withOptions(function (options = {}) {
 
                     allowedBackgroundColors.forEach((colorName) => {
                         addUtilities({
-                            [`.${classNamePrefix}-${colorName.replace('-', '_')}`]: {
+                            [`.${classNamePrefix}-${colorName.replaceAll('-', '_')}`]: {
                                 'background-color': flattenColorPalette(theme('colors'))[colorName]
                             }
                         })
