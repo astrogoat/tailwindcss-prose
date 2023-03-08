@@ -8,7 +8,7 @@ module.exports = plugin.withOptions(function (options = {}) {
         let styles = _.merge({
             textColor: {
                 prefix: options.styles?.textColor?.prefix || 'text-color',
-                options: options.styles?.backgroundColor?.options || flattenColorPalette(theme('colors'))
+                options: options.styles?.backgroundColor?.options || Object.keys(flattenColorPalette(theme('colors')))
             },
             textSize: {
                 prefix: options.styles?.textSize?.prefix || 'text-size',
@@ -16,7 +16,7 @@ module.exports = plugin.withOptions(function (options = {}) {
             },
             backgroundColor: {
                 prefix: options.styles?.backgroundColor?.prefix || 'background-color',
-                options: options.styles?.backgroundColor?.options || flattenColorPalette(theme('colors'))
+                options: options.styles?.backgroundColor?.options || Object.keys(flattenColorPalette(theme('colors')))
             },
             fontFamily: {
                 prefix: options.styles?.fontFamily?.prefix || 'font-family',
