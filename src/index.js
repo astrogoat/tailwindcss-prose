@@ -3,7 +3,7 @@ const _ = require("lodash");
 const { default: flattenColorPalette } = require("tailwindcss/lib/util/flattenColorPalette")
 
 module.exports = plugin.withOptions(function (options = {}) {
-    return function ({ addUtilities, matchUtilities, theme }) {
+    return function ({ addUtilities, matchUtilities, theme, config }) {
         let prefix = options.prefix || 'strata-'
         let styles = _.merge({
             textColor: {
